@@ -1,0 +1,86 @@
+{
+  "sections": [
+    {
+      "title": "4.1 Working with images",
+      "subsections": [
+        {
+          "title": "4.1.1 Adding color channels"
+        },
+        {
+          "title": "4.1.2 Loading an image file"
+        },
+        {
+          "title": "4.1.3 Working with images"
+        },
+        {
+          "title": "4.1.4 Normalizing the data"
+        }
+      ]
+    },
+    {
+      "title": "4.2 3D images: Volumetric data",
+      "subsections": [
+        {
+          "title": "4.2.1 Loading a specialized format"
+        }
+      ]
+    },
+    {
+      "title": "4.3 Representing tabular data",
+      "subsections": [
+        {
+          "title": "4.3.1 Using a real-world dataset"
+        },
+        {
+          "title": "4.3.2 Loading a wine data tensor"
+        },
+        {
+          "title": "4.3.3 Representing scores"
+        },
+        {
+          "title": "4.3.4 One-hot encoding"
+        },
+        {
+          "title": "4.3.5 When to categorize"
+        },
+        {
+          "title": "4.3.6 Finding thresholds"
+        }
+      ]
+    },
+    {
+      "title": "4.4 Working with time series",
+      "subsections": [
+        {
+          "title": "4.4.1 Adding a time dimension"
+        },
+        {
+          "title": "4.4.2 Shaping the data by time period"
+        },
+        {
+          "title": "4.4.3 Ready for training"
+        }
+      ]
+    },
+    {
+      "title": "4.5 Representing text",
+      "subsections": [
+        {
+          "title": "4.5.1 Converting text to numbers"
+        },
+        {
+          "title": "4.5.2 One-hot-encoding characters"
+        },
+        {
+          "title": "4.5.3 One-hot encoding whole words"
+        },
+        {
+          "title": "4.5.4 Text embeddings"
+        },
+        {
+          "title": "4.5.5 Text embeddings as a blueprint"
+        }
+      ]
+    }
+  ]
+}

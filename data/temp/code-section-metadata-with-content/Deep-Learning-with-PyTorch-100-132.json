@@ -1,0 +1,134 @@
+{
+  "sections": [
+    {
+      "title": "4.1 Working with images",
+      "header_level": 2,
+      "content": "The introduction of convolutional neural networks revolutionized computer vision, enabling end-to-end networks trained on paired input-output examples to solve complex visual tasks. To participate in this revolution, we must load images from common formats and transform them into tensor representations arranged as PyTorch expects. An image is represented as a collection of scalars arranged in a regular grid with height and width in pixels.",
+      "subsections": [
+        {
+          "title": "4.1.1 Adding color channels",
+          "header_level": 3,
+          "content": "Colors are commonly encoded in RGB, where each color channel acts as a grayscale intensity map of that specific color component. Figure 4.1 illustrates a rainbow broken into its respective color channels.\r\n\r\n[[img-01]]\r\nFigure 4.1 A rainbow, broken into red, green, and blue channels"
+        },
+        {
+          "title": "4.1.2 Loading an image file",
+          "header_level": 3,
+          "content": "Images can be loaded in Python using various modules such as imageio."
+        },
+        {
+          "title": "4.1.3 Working with images",
+          "header_level": 3,
+          "content": "Listing 4.1 code/p1ch4/1_image_dog.ipynb\r\n\r\n```python\r\n# In [2]:\r\nimport imageio\r\nimageio.imread('../data/p1ch4/image-dog/bobby.jpg')\r\nimg_arr\r\nimg_arr.shape\r\n# Out [2]:\r\n(720, 1280, 3)\r\n\r\n```\r\n\r\nPyTorch modules require image tensors to be laid out as $C \\times H \\times W$ for channels, height, and width. We can use the permute method to adjust dimensions without duplicating tensor data. A batch of images is stored along the first dimension to obtain an $N \\times C \\times H \\times W$ tensor.\r\n\r\n```python\r\n# In [3]:\r\nimg\r\nout\r\ntorch.from_numpy(img_arr)\r\nimg.permute(2, 0, 1)\r\n\r\n```\r\n\r\n```python\r\n# In [4]:\r\nbatch_size = 3\r\nbatch\r\ntorch.zeros(batch_size, 3, 256, 256, dtype=torch.uint8)\r\n\r\n```\r\n\r\n```python\r\n# In [5]:\r\nimport os\r\ndata_dir = '../data/p1ch4/image-cats/'\r\nfilenames = [name for name in os.listdir(data_dir)\r\nif os.path.splitext(name)[-1] == '.png']\r\nfor i, filename in enumerate(filenames):\r\n    img_arr = imageio.imread(os.path.join(data_dir, filename))\r\n    img_t = torch.from_numpy(img_arr)\r\n    img_t = img_t.permute(2, 0, 1)\r\n    img_t = img_t[:3]\r\n    batch[i] = img_t\r\n\r\n```"
+        },
+        {
+          "title": "4.1.4 Normalizing the data",
+          "header_level": 3,
+          "content": "Neural networks exhibit best performance when input data ranges from $0$ to $1$ or $-1$ to $1$. Normalization can be achieved by dividing pixel values by $255.0$ or scaling by the mean and standard deviation across each channel.\r\n\r\n```python\r\n# In [6]:\r\nbatch = batch.float()\r\nbatch /= 255.0\r\n\r\n```\r\n\r\n```python\r\n# In [7]:\r\nn_channels = batch.shape[1]\r\nfor c in range(n_channels):\r\n    torch.mean(batch[:, c])\r\n    mean = torch.mean(batch[:, c])\r\n    std = torch.std(batch[:, c])\r\n    batch[:, c] = (batch[:, c] - mean) / std\r\n\r\n```"
+        }
+      ]
+    },
+    {
+      "title": "4.2 3D images: Volumetric data",
+      "header_level": 2,
+      "content": "Medical imaging applications like CT scans use sequences of images stacked along the head-to-foot axis to represent human anatomy. CT scans typically possess a single intensity channel representing tissue density, producing a 3D volume without native channel dimensions. Stacking individual slices results in a 5D tensor of shape $N \\times C \\times D \\times H \\times W$.\r\n\r\n[[img-02]]\r\nFigure 4.2 Slices of a CT scan, from the top of the head to the jawline",
+      "subsections": [
+        {
+          "title": "4.2.1 Loading a specialized format",
+          "header_level": 3,
+          "content": "Sample CT scans can be loaded using the volread function in imageio.\r\n\r\nListing 4.2 code/p1ch4/2_volumetric_ct.ipynb\r\n\r\n```python\r\n# In [2]:\r\nimport imageio\r\ndir_path = \"../data/p1ch4/volumetric-dicom/2-LUNG 3.0 B70f-04083\"\r\nvol_arr = imageio.volread(dir_path, 'DICOM')\r\nvol_arr.shape\r\n# Out [2]:\r\nReading DICOM (examining files): 1/99 files (1.0%99/99 files (100.0%)\r\nFound 1 correct series.\r\nReading DICOM (loading data): 31/99 (31.392/99 (92.999/99 (100.0%)\r\n(99, 512, 512)\r\n\r\n```\r\n\r\n```python\r\n# In [3]:\r\nvol = torch.from_numpy(vol_arr).float()\r\nvol = torch.unsqueeze(vol, 0)\r\nvol.shape\r\n# Out [3]:\r\ntorch.Size([1, 99, 512, 512])\r\n\r\n```"
+        }
+      ]
+    },
+    {
+      "title": "4.3 Representing tabular data",
+      "header_level": 2,
+      "content": "Tabular data consists of rows representing independent samples and columns containing specific attributes. Because PyTorch tensors are homogeneous and require numerical encoding, real-world heterogeneous tables must be converted into floating-point tensors.\r\n\r\n[[img-03]]\r\nFigure 4.3 The (we hope) relationship between sulfur and quality in wine",
+      "subsections": [
+        {
+          "title": "4.3.1 Using a real-world dataset",
+          "header_level": 3,
+          "content": "The Wine Quality dataset contains chemical properties of vinho verde wine samples alongside a sensory quality score. The objective is to predict wine quality based on chemical attributes."
+        },
+        {
+          "title": "4.3.2 Loading a wine data tensor",
+          "header_level": 3,
+          "content": "Data can be loaded from comma-separated files using NumPy and converted into PyTorch tensors. Values are categorized into continuous, ordinal, and categorical scales.\r\n\r\nListing 4.3 code/p1ch4/3_tabular_wine.ipynb\r\n\r\n```python\r\n# In [2]:\r\nimport csv\r\nwine_path = \"../data/p1ch4/tabular-wine/winequality-white.csv\"\r\nwineq_numpy = np.loadtxt(wine_path, dtype=np.float32, delimiter=\";\", skiprows=1)\r\nwineq_numpy\r\n# Out [2]:\r\narray([[7. , 0.27, 0.36, ..., 0.45, 8.8 , 6. ],\r\n       [6.3, 0.3 , 0.34, ..., 0.49, 9.5 , 6. ],\r\n       [8.1, 0.28, 0.4 , ..., 0.44, 10.1, 6. ],\r\n       ...,\r\n       [6.5, 0.24, 0.19, ..., 0.46, 9.4 , 6. ],\r\n       [5.5, 0.29, 0.3 , ..., 0.38, 12.8, 7. ],\r\n       [6. , 0.21, 0.38, ..., 0.32, 11.8, 6. ]], dtype=float32)\r\n\r\n```\r\n\r\n```python\r\n# In [3]:\r\ncol_list = next(csv.reader(open(wine_path), delimiter=';'))\r\nwineq_numpy.shape, col_list\r\n# Out [3]:\r\n((4898, 12),\r\n ['fixed acidity',\r\n  'volatile acidity',\r\n  'citric acid',\r\n  'residual sugar',\r\n  'chlorides',\r\n  'free sulfur dioxide',\r\n  'total sulfur dioxide',\r\n  'density',\r\n  'pH',\r\n  'sulphates',\r\n  'alcohol',\r\n  'quality'])\r\n\r\n```\r\n\r\n```python\r\n# In [4]:\r\nwineq = torch.from_numpy(wineq_numpy)\r\nwineq.shape, wineq.dtype\r\n# Out [4]:\r\n(torch.Size([4898, 12]), torch.float32)\r\n\r\n```"
+        },
+        {
+          "title": "4.3.3 Representing scores",
+          "header_level": 3,
+          "content": "Quality scores are separated from input features and retained in a dedicated target tensor for regression or classification tasks.\r\n\r\n```python\r\n# In [5]:\r\ndata = wineq[:, :-1]\r\ndata, data.shape\r\n# Out [5]:\r\n(tensor([[ 7.00,  0.27,  0.36, ...,  0.45,  8.80],\r\n         [ 6.30,  0.30,  0.34, ...,  0.49,  9.50],\r\n         [ 5.50,  0.29,  0.38, ...,  0.38, 12.80],\r\n         ...,\r\n         [ 6.00,  0.21,  0.38, ...,  0.32, 11.80]]), torch.Size([4898, 11]))\r\n\r\n```\r\n\r\n```python\r\n# In [6]:\r\ntarget = wineq[:, -1]\r\ntarget, target.shape\r\n# Out [6]:\r\n(tensor([6., 6., 7., ..., 6., 7., 6.]), torch.Size([4898]))\r\n\r\n```\r\n\r\n```python\r\n# In [7]:\r\ntarget = wineq[:, -1].long()\r\ntarget\r\n# Out [7]:\r\ntensor([6, 6, 7, ..., 6, 7, 6])\r\n\r\n```"
+        },
+        {
+          "title": "4.3.4 One-hot encoding",
+          "header_level": 3,
+          "content": "Categorical labels can be converted into one-hot encoded vectors via the scatter_ method. This approach eliminates artificial ordering constraints present in integer labels.\r\n\r\n```python\r\n# In [8]:\r\ntarget_onehot = torch.zeros(target.shape[0], 10)\r\ntarget_onehot.scatter_(1, target.unsqueeze(1), 1.0)\r\n# Out [8]:\r\ntensor([[0., 0., 0., ..., 0., 0., 0.],\r\n        [0., 0., 0., ..., 0., 0., 0.],\r\n        [0., 0., 0., ..., 0., 0., 0.],\r\n        ...,\r\n        [0., 0., 0., ..., 0., 0., 0.],\r\n        [0., 0., 0., ..., 0., 0., 0.],\r\n        [0., 0., 0., ..., 0., 0., 0.]])\r\n\r\n```\r\n\r\n```python\r\n# In [9]:\r\ntarget_unsqueezed = target.unsqueeze(1)\r\ntarget_unsqueezed\r\n# Out [9]:\r\ntensor([[6],\r\n        [6],\r\n        [7],\r\n        ...,\r\n        [6],\r\n        [7],\r\n        [6]])\r\n\r\n```"
+        },
+        {
+          "title": "4.3.5 When to categorize",
+          "header_level": 3,
+          "content": "Continuous, ordinal, and categorical columns are handled via distinct processing strategies summarized in figure 4.4. Column variables can be normalized by subtracting their mean and dividing by the standard deviation.\r\n\r\n[[img-04]]\r\nFigure 4.4 How to treat columns with continuous, ordinal, and categorical data\r\n\r\n```python\r\n# In [10]:\r\ndata_mean = torch.mean(data, dim=0)\r\ndata_mean\r\n# Out [10]:\r\ntensor([6.85e+00, 2.78e-01, 3.34e-01, 6.39e+00, 4.58e-02, 3.53e+01,\r\n        1.38e+02, 9.94e-01, 3.19e+00, 4.90e-01, 1.05e+01])\r\n\r\n```\r\n\r\n```python\r\n# In [11]:\r\ndata_var = torch.var(data, dim=0)\r\ndata_var\r\n# Out [11]:\r\ntensor([7.12e-01, 1.02e-02, 1.46e-02, 2.57e+01, 4.77e-04, 2.89e+02,\r\n        1.81e+03, 8.95e-06, 2.28e-02, 1.30e-02, 1.51e+00])\r\n\r\n```\r\n\r\n```python\r\n# In [12]:\r\ndata_normalized = (data - data_mean) / torch.sqrt(data_var)\r\ndata_normalized\r\n# Out [12]:\r\ntensor([[ 1.72e-01, -8.18e-02,  2.16e-01, ..., -3.49e-01, -1.39e+00],\r\n        [-6.57e-01,  2.08e-01,  5.23e-02, ...,  1.35e-03, -8.24e-01],\r\n        [-1.61e+00,  1.17e-01,  3.43e-01, ..., -9.63e-01,  1.49e+00],\r\n        ...,\r\n        [-1.01e+00, -3.39e-01, -1.25e+00, ..., -6.77e-01,  1.86e+00],\r\n        [-1.28e+00,  1.17e-01, -2.18e-01, ..., -3.49e-01,  1.04e+00],\r\n        [-1.01e+00, -7.95e-01,  3.43e-01, ..., -9.63e-01,  3.75e-01]])\r\n\r\n```"
+        },
+        {
+          "title": "4.3.6 Finding thresholds",
+          "header_level": 3,
+          "content": "Advanced indexing with boolean tensors allows filtering dataset records to evaluate specific criteria, such as isolating bad or good wine samples based on chemical thresholds.\r\n\r\n```python\r\n# In [13]:\r\nbad_indexes = target <= 3\r\nbad_indexes.shape, bad_indexes.dtype, bad_indexes.sum()\r\n# Out [13]:\r\n(torch.Size([4898]), torch.bool, tensor(20))\r\n\r\n```\r\n\r\n```python\r\n# In [14]:\r\nbad_data = data[bad_indexes]\r\nbad_data.shape\r\n# Out [14]:\r\ntorch.Size([20, 11])\r\n\r\n```\r\n\r\n```python\r\n# In [15]:\r\nbad_data = data[target <= 3]\r\nmid_data = data[(target > 3) & (target < 7)]\r\ngood_data = data[target >= 7]\r\nbad_mean = torch.mean(bad_data, dim=0)\r\nmid_mean = torch.mean(mid_data, dim=0)\r\ngood_mean = torch.mean(good_data, dim=0)\r\nfor i, args in enumerate(zip(col_list, bad_mean, mid_mean, good_mean)):\r\n    print('{:2} {:20} {:6.2f} {:6.2f} {:6.2f}'.format(i, *args))\r\n# Out [15]:\r\n0 fixed acidity         7.60   6.89   6.73\r\n1 volatile acidity      0.33   0.28   0.27\r\n2 citric acid           0.34   0.34   0.33\r\n3 residual sugar        6.39   6.71   5.26\r\n4 chlorides             0.05   0.05   0.04\r\n5 free sulfur dioxide  53.33  35.42  34.55\r\n6 total sulfur dioxide 170.60 141.83 125.25\r\n7 density               0.99   0.99   0.99\r\n8 pH                    3.19   3.18   3.22\r\n9 sulphates             0.47   0.49   0.50\r\n10 alcohol             10.34  10.26  11.42\r\n\r\n```\r\n\r\n```python\r\n# In [16]:\r\ntotal_sulfur_threshold = 141.83\r\ntotal_sulfur_data = data[:, 6]\r\npredicted_indexes = torch.lt(total_sulfur_data, total_sulfur_threshold)\r\npredicted_indexes.shape, predicted_indexes.dtype, predicted_indexes.sum()\r\n# Out [16]:\r\n(torch.Size([4898]), torch.bool, tensor(2727))\r\n\r\n```\r\n\r\n```python\r\n# In [17]:\r\nactual_indexes = target > 5\r\nactual_indexes.shape, actual_indexes.dtype, actual_indexes.sum()\r\n# Out [17]:\r\n(torch.Size([4898]), torch.bool, tensor(3258))\r\n\r\n```\r\n\r\n```python\r\n# In [18]:\r\nn_matches = torch.sum(actual_indexes & predicted_indexes).item()\r\nn_predicted = torch.sum(predicted_indexes).item()\r\nn_actual = torch.sum(actual_indexes).item()\r\nn_matches, n_matches / n_predicted, n_matches / n_actual\r\n# Out [18]:\r\n(2018, 0.74000733406674, 0.6193984039287906)\r\n\r\n```"
+        }
+      ]
+    },
+    {
+      "title": "4.4 Working with time series",
+      "header_level": 2,
+      "content": "Time-series datasets include an explicit ordering across rows, enabling models to capture sequential dependencies over time. Figure 4.5 demonstrates transforming a flat 1D dataset into a structured 2D multichannel format by separating dates and hours.\r\n\r\n[[img-05]]\r\nFigure 4.5 Transforming a 1D, multichannel dataset into a 2D, multichannel dataset by separating the date and hour of each sample into separate axes",
+      "subsections": [
+        {
+          "title": "4.4.1 Adding a time dimension",
+          "header_level": 3,
+          "content": "Sequential records are restructured into fixed-size chunks representing observation periods like days or weeks. This organizes the tensor shape into $N \\times C \\times L$ dimensions."
+        },
+        {
+          "title": "4.4.2 Shaping the data by time period",
+          "header_level": 3,
+          "content": "The view and transpose methods rearrange tensor shapes and strides at zero memory cost without duplicating underlying storage.\r\n\r\nListing 4.4 code/p1ch4/4_time_series_bikes.ipynb\r\n\r\n```python\r\n# In [2]:\r\nbikes_numpy = np.loadtxt(\r\n    \"../data/p1ch4/bike-sharing-dataset/hour-fixed.csv\",\r\n    dtype=np.float32,\r\n    delimiter=\",\",\r\n    skiprows=1,\r\n    converters={1: lambda x: float(x[8:10])})\r\nbikes = torch.from_numpy(bikes_numpy)\r\nbikes\r\n# Out [2]:\r\ntensor([[1.0000e+00, 1.0000e+00, 1.0000e+00, ..., 3.0000e+00,\r\n         1.3000e+01, 1.6000e+01],\r\n        [2.0000e+00, 1.0000e+00, 1.0000e+00, ..., 8.0000e+00,\r\n         3.2000e+01, 4.0000e+01],\r\n        ...,\r\n        [1.7378e+04, 3.1000e+01, 1.0000e+00, ..., 3.0000e+00,\r\n         4.8000e+01, 6.1000e+01],\r\n        [1.7379e+04, 3.1000e+01, 1.0000e+00, ..., 1.0000e+00,\r\n         3.7000e+01, 4.9000e+01]])\r\n\r\n```\r\n\r\n```python\r\n# In [3]:\r\nbikes.shape, bikes.stride()\r\n# Out [3]:\r\n(torch.Size([17520, 17]), (17, 1))\r\n\r\n```\r\n\r\n```python\r\n# In [4]:\r\ndaily_bikes = bikes.view(-1, 24, bikes.shape[1])\r\ndaily_bikes.shape, daily_bikes.stride()\r\n# Out [4]:\r\n(torch.Size([730, 24, 17]), (408, 17, 1))\r\n\r\n```\r\n\r\n```python\r\n# In [5]:\r\ndaily_bikes = daily_bikes.transpose(1, 2)\r\ndaily_bikes.shape, daily_bikes.stride()\r\n# Out [5]:\r\n(torch.Size([730, 17, 24]), (408, 1, 17))\r\n\r\n```"
+        },
+        {
+          "title": "4.4.3 Ready for training",
+          "header_level": 3,
+          "content": "Ordinal and categorical features like weather situations can be transformed into one-hot encoded vectors or rescaled to continuous intervals to optimize neural network training.\r\n\r\n```python\r\n# In [6]:\r\nfirst_day = bikes[:24].long()\r\nweather_onehot = torch.zeros(first_day.shape[0], 4)\r\nfirst_day[:, 9]\r\n# Out [6]:\r\ntensor([1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 2, 2,\r\n        2])\r\n\r\n```\r\n\r\n```python\r\n# In [7]:\r\nweather_onehot.scatter_(\r\n    dim=1,\r\n    index=first_day[:, 9].unsqueeze(1) - 1,\r\n    value=1.0)\r\n# Out [7]:\r\ntensor([[0., 1., 0., 0.],\r\n        [0., 1., 0., 0.],\r\n        [0., 1., 0., 0.],\r\n        ...,\r\n        [0., 0., 1., 0.],\r\n        [0., 1., 0., 0.],\r\n        [0., 1., 0., 0.]])\r\n\r\n```\r\n\r\n```python\r\n# In [8]:\r\ntorch.cat((bikes[:24], weather_onehot), 1)[:1]\r\n# Out [8]:\r\ntensor([[1.0000e+00, 1.0000e+00, 1.0000e+00, ..., 0.0000e+00,\r\n         0.0000e+00, 0.0000e+00]])\r\n\r\n```\r\n\r\n```python\r\n# In [9]:\r\ndaily_weather_onehot = torch.zeros(daily_bikes.shape[0], 4,\r\n                                   daily_bikes.shape[2])\r\ndaily_weather_onehot.shape\r\n# Out [9]:\r\ntorch.Size([730, 4, 24])\r\n\r\n```\r\n\r\n```python\r\n# In [10]:\r\ndaily_weather_onehot.scatter_(\r\n    1, daily_bikes[:, 9, :].long().unsqueeze(1) - 1, 1.0)\r\ndaily_weather_onehot.shape\r\n# Out [10]:\r\ntorch.Size([730, 4, 24])\r\n\r\n```\r\n\r\n```python\r\n# In [11]:\r\ndaily_bikes = torch.cat((daily_bikes, daily_weather_onehot), dim=1)\r\n\r\n```\r\n\r\n```python\r\n# In [12]:\r\ndaily_bikes[:, 9, :] = (daily_bikes[:, 9, :] - 1.0) / 3.0\r\n\r\n```\r\n\r\n```python\r\n# In [13]:\r\ntemp = daily_bikes[:, 10, :]\r\ntemp_min = torch.min(temp)\r\ntemp_max = torch.max(temp)\r\ndaily_bikes[:, 10, :] = ((daily_bikes[:, 10, :] - temp_min)\r\n                         / (temp_max - temp_min))\r\n\r\n```\r\n\r\n```python\r\n# In [14]:\r\ntemp = daily_bikes[:, 10, :]\r\ndaily_bikes[:, 10, :] = ((daily_bikes[:, 10, :] - torch.mean(temp))\r\n                         / torch.std(temp))\r\n\r\n```"
+        }
+      ]
+    },
+    {
+      "title": "4.5 Representing text",
+      "header_level": 2,
+      "content": "Text data can be processed at the character level or word level to convert language into numerical tensor representations suitable for natural language processing models.\r\n\r\nListing 4.5 code/p1ch4/5_text_jane_austen.ipynb\r\n\r\n```python\r\n# In [2]:\r\nwith open('../data/p1ch4/jane-austen/1342-0.txt', encoding='utf8') as f:\r\n    text = f.read()\r\n\r\n```",
+      "subsections": [
+        {
+          "title": "4.5.1 Converting text to numbers",
+          "header_level": 3,
+          "content": "Natural language datasets like Jane Austen's Pride and Prejudice from Project Gutenberg provide raw text inputs for tokenization and numerical encoding."
+        },
+        {
+          "title": "4.5.2 One-hot-encoding characters",
+          "header_level": 3,
+          "content": "Text is parsed into individual lines and characters are mapped to ASCII indices to create one-hot encoded character matrices.\r\n\r\n```python\r\n# In [3]:\r\nlines = text.split('\\n')\r\nline = lines[200]\r\nline\r\n# Out [3]:\r\n\"Impossible, Mr. Bennet, impossible, when I am not acquainted with him'\"\r\n\r\n```\r\n\r\n```python\r\n# In [4]:\r\nletter_t = torch.zeros(len(line), 128)\r\nletter_t.shape\r\n# Out [4]:\r\ntorch.Size([70, 128])\r\n\r\n```\r\n\r\n```python\r\n# In [5]:\r\nfor i, letter in enumerate(line.lower().strip()):\r\n    letter_index = ord(letter) if ord(letter) < 128 else 0\r\n    letter_t[i][letter_index] = 1\r\n\r\n```"
+        },
+        {
+          "title": "4.5.3 One-hot encoding whole words",
+          "header_level": 3,
+          "content": "Word-level encoding establishes a vocabulary mapping words to unique dictionary indices, producing wide one-hot encoded tensors across sentences. Figure 4.6 illustrates character-level, word-level, and embedding representations.\r\n\r\n[[img-06]]\r\nFigure 4.6 Three ways to encode a word\r\n\r\n```python\r\n# In [6]:\r\ndef clean_words(input_str):\r\n    punctuation = '.,;:\"?!-_'\r\n    word_list = input_str.lower().replace('\\n', '').split()\r\n    word_list = [word.strip(punctuation) for word in word_list]\r\n    return word_list\r\nwords_in_line = clean_words(line)\r\nline, words_in_line\r\n# Out [6]:\r\n(\"Impossible, Mr. Bennet, impossible, when I am not acquainted with him'\",\r\n ['impossible',\r\n  'mr',\r\n  'bennet',\r\n  'impossible',\r\n  'when',\r\n  'i',\r\n  'am',\r\n  'not',\r\n  'acquainted',\r\n  'with',\r\n  'him'])\r\n\r\n```\r\n\r\n```python\r\n# In [7]:\r\nword_list = sorted(set(clean_words(text)))\r\nword2index_dict = {word: i for (i, word) in enumerate(word_list)}\r\nlen(word2index_dict), word2index_dict['impossible']\r\n# Out [7]:\r\n(7261, 3394)\r\n\r\n```\r\n\r\n```python\r\n# In [8]:\r\nword_t = torch.zeros(len(words_in_line), len(word2index_dict))\r\nfor i, word in enumerate(words_in_line):\r\n    word_index = word2index_dict[word]\r\n    word_t[i][word_index] = 1\r\n    print('{:2} {:4} {}'.format(i, word_index, word))\r\nprint(word_t.shape)\r\n# Out [8]:\r\n0 3394 impossible\r\n1 4305 mr\r\n2  813 bennet\r\n3 3394 impossible\r\n4 7078 when\r\n5 3315 i\r\n6  415 am\r\n7 4436 not\r\n8  239 acquainted\r\n9 7148 with\r\n10 3215 him\r\ntorch.Size([11, 7261])\r\n\r\n```"
+        },
+        {
+          "title": "4.5.4 Text embeddings",
+          "header_level": 3,
+          "content": "Embeddings map words into dense, lower-dimensional floating-point vector spaces where semantically similar words occupy neighboring regions, facilitating efficient representations and relational analogies. Figure 4.7 presents a manual 2D word embedding example.\r\n\r\n[[img-07]]\r\nFigure 4.7 Our manual word embeddings"
+        },
+        {
+          "title": "4.5.5 Text embeddings as a blueprint",
+          "header_level": 3,
+          "content": "Embeddings serve as an efficient alternative to high-dimensional one-hot encodings, applicable to text vocabularies as well as general categorical data and recommendation systems."
+        }
+      ]
+    }
+  ]
+}
