@@ -1,0 +1,26 @@
+[
+  {
+    "section": "12.3 Graphing the positives and negatives",
+    "subsections": [
+      {
+        "subsection": "12.3.4 Updating our metrics calculation"
+      }
+    ]
+  },
+  {
+    "section": "12.4 What does an ideal dataset look like?",
+    "subsections": [
+      {
+        "subsection": "12.4.1 Balancing our dataset"
+      }
+    ]
+  },
+  {
+    "section": "12.6 Preventing overfitting with data augmentation",
+    "subsections": [
+      {
+        "subsection": "12.6.1 Augmenting data"
+      }
+    ]
+  }
+]

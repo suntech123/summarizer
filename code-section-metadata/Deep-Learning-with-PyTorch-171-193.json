@@ -1,0 +1,30 @@
+[
+  {
+    "section": "6.2 The PyTorch nn module",
+    "subsections": [
+      {
+        "subsection": "6.2.1 Using Linear as a replacement for polynomial"
+      },
+      {
+        "subsection": "6.2.2 A batch of inputs"
+      },
+      {
+        "subsection": "6.2.3 Optimization with PyTorch nn"
+      }
+    ]
+  },
+  {
+    "section": "6.3 Finally a neural network",
+    "subsections": [
+      {
+        "subsection": "6.3.1 Replacing the linear model"
+      },
+      {
+        "subsection": "6.3.2 Inspecting parameters"
+      },
+      {
+        "subsection": "6.3.3 Comparing to the linear model"
+      }
+    ]
+  }
+]

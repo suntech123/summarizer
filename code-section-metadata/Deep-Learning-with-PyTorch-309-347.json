@@ -1,0 +1,32 @@
+[
+  {
+    "section": "11.2 Application structure and initialization",
+    "subsections": [
+      {
+        "subsection": "11.2.1 Pretraining setup and initialization"
+      },
+      {
+        "subsection": "11.2.2 Data loaders and batch creation"
+      }
+    ]
+  },
+  {
+    "section": "11.3 Our first-pass neural network design",
+    "subsections": [
+      {
+        "subsection": "11.3.1 Module blocks and sub-networks"
+      },
+      {
+        "subsection": "11.3.2 The full model"
+      }
+    ]
+  },
+  {
+    "section": "11.4 Training and validating the model",
+    "subsections": []
+  },
+  {
+    "section": "11.5 Outputting performance metrics",
+    "subsections": []
+  }
+]

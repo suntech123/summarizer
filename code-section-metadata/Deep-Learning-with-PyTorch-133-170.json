@@ -1,0 +1,55 @@
+[
+  {
+    "section": "5.2 Learning is just parameter estimation",
+    "subsections": [
+      {
+        "subsection": "5.2.2 Gathering some data"
+      }
+    ]
+  },
+  {
+    "section": "5.3 Less loss is what we want",
+    "subsections": [
+      {
+        "subsection": "5.3.1 From problem back to PyTorch"
+      }
+    ]
+  },
+  {
+    "section": "5.4 Down along the gradient",
+    "subsections": [
+      {
+        "subsection": "5.4.1 Decreasing loss"
+      },
+      {
+        "subsection": "5.4.2 Getting analytical"
+      },
+      {
+        "subsection": "5.4.3 Iterating to fit the model"
+      },
+      {
+        "subsection": "5.4.4 Normalizing inputs"
+      },
+      {
+        "subsection": "5.4.5 Visualizing (again)"
+      }
+    ]
+  },
+  {
+    "section": "5.5 PyTorch's autograd: Backpropagating all things",
+    "subsections": [
+      {
+        "subsection": "5.5.1 Computing the gradient automatically"
+      },
+      {
+        "subsection": "5.5.2 Optimizers a la carte"
+      },
+      {
+        "subsection": "5.5.3 Training, validation, and overfitting"
+      },
+      {
+        "subsection": "5.5.4 Autograd nits and switching it off"
+      }
+    ]
+  }
+]

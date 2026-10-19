@@ -1,0 +1,50 @@
+[
+  {
+    "section": "15.1 Serving PyTorch models",
+    "subsections": [
+      {
+        "subsection": "15.1.1 Our model behind a Flask server"
+      },
+      {
+        "subsection": "15.1.3 Request batching"
+      }
+    ]
+  },
+  {
+    "section": "15.2 Exporting models",
+    "subsections": [
+      {
+        "subsection": "15.2.1 Interoperability beyond PyTorch with ONNX"
+      },
+      {
+        "subsection": "15.2.2 PyTorch's own export: Tracing"
+      }
+    ]
+  },
+  {
+    "section": "15.3 Interacting with the PyTorch JIT",
+    "subsections": [
+      {
+        "subsection": "15.3.3 TorchScript"
+      },
+      {
+        "subsection": "15.3.4 Scripting the gaps of traceability"
+      }
+    ]
+  },
+  {
+    "section": "15.4 LibTorch: PyTorch in C++",
+    "subsections": [
+      {
+        "subsection": "15.4.1 Running JITed models from C++"
+      },
+      {
+        "subsection": "15.4.2 C++ from the start: The C++ API"
+      }
+    ]
+  },
+  {
+    "section": "15.5 Going mobile",
+    "subsections": []
+  }
+]

@@ -1,0 +1,39 @@
+[
+  {
+    "section": "7.1 A dataset of tiny images",
+    "subsections": [
+      {
+        "subsection": "7.1.1 Downloading CIFAR-10"
+      },
+      {
+        "subsection": "7.1.2 The Dataset class"
+      },
+      {
+        "subsection": "7.1.3 Dataset transforms"
+      },
+      {
+        "subsection": "7.1.4 Normalizing data"
+      }
+    ]
+  },
+  {
+    "section": "7.2 Distinguishing birds from airplanes",
+    "subsections": [
+      {
+        "subsection": "7.2.1 Building the dataset"
+      },
+      {
+        "subsection": "7.2.2 A fully connected model"
+      },
+      {
+        "subsection": "7.2.4 Representing the output as probabilities"
+      },
+      {
+        "subsection": "7.2.5 A loss for classifying"
+      },
+      {
+        "subsection": "7.2.6 Training the classifier"
+      }
+    ]
+  }
+]

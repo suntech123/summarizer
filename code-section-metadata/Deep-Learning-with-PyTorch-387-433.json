@@ -1,0 +1,28 @@
+[
+  {
+    "section": "13.2 Updating the model for segmentation",
+    "subsections": []
+  },
+  {
+    "section": "13.3 Updating the dataset for segmentation",
+    "subsections": [
+      {
+        "subsection": "13.3.2 LIDC annotation processing"
+      }
+    ]
+  },
+  {
+    "section": "13.4 Updating the training script for segmentation",
+    "subsections": [
+      {
+        "subsection": "13.4.1 Sørensen-Dice coefficient and Dice loss"
+      },
+      {
+        "subsection": "13.4.2 Training loop implementation"
+      },
+      {
+        "subsection": "13.4.3 TensorBoard logging and image visualization"
+      }
+    ]
+  }
+]

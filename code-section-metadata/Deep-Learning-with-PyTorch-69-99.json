@@ -1,0 +1,89 @@
+[
+  {
+    "section": "3.2 Tensors: Multidimensional arrays",
+    "subsections": [
+      {
+        "subsection": "3.2.1 From Python lists to PyTorch tensors"
+      },
+      {
+        "subsection": "3.2.2 Constructing our first tensors"
+      },
+      {
+        "subsection": "3.2.3 Indexing tensors"
+      }
+    ]
+  },
+  {
+    "section": "3.3 Named tensors",
+    "subsections": [
+      {
+        "subsection": "3.3.1 Dimension names"
+      },
+      {
+        "subsection": "3.3.2 Operating on named tensors"
+      }
+    ]
+  },
+  {
+    "section": "3.4 Tensor element types",
+    "subsections": [
+      {
+        "subsection": "3.4.1 Specifying the numeric type with dtype"
+      },
+      {
+        "subsection": "3.4.2 Managing a tensor's dtype attribute"
+      }
+    ]
+  },
+  {
+    "section": "3.6 Tensors: Scenic views of storage",
+    "subsections": [
+      {
+        "subsection": "3.6.1 Indexing into storage"
+      },
+      {
+        "subsection": "3.6.2 Modifying stored values in-place"
+      }
+    ]
+  },
+  {
+    "section": "3.7 Tensor metadata: Size, offset, and stride",
+    "subsections": [
+      {
+        "subsection": "3.7.1 Views of storage"
+      },
+      {
+        "subsection": "3.7.2 Transposing without copying"
+      },
+      {
+        "subsection": "3.7.3 Transposing in higher dimensions"
+      },
+      {
+        "subsection": "3.7.4 Contiguous tensors"
+      }
+    ]
+  },
+  {
+    "section": "3.8 Moving tensors to the GPU",
+    "subsections": [
+      {
+        "subsection": "3.8.1 Managing a tensor's device attribute"
+      }
+    ]
+  },
+  {
+    "section": "3.9 NumPy interoperability",
+    "subsections": []
+  },
+  {
+    "section": "3.11 Serializing tensors",
+    "subsections": [
+      {
+        "subsection": "3.11.1 Saving and loading tensors with torch.save"
+      },
+      {
+        "subsection": "3.11.2 Serializing to HDF5 with h5py"
+      }
+    ]
+  }
+]

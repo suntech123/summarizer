@@ -1,0 +1,29 @@
+[
+  {
+    "section": "10.1 Raw data source: LUNA618 annotations",
+    "subsections": [
+      {
+        "subsection": "10.1.1 Parsing LUNA's annotation data"
+      }
+    ]
+  },
+  {
+    "section": "10.2 Loading individual CT scans",
+    "subsections": []
+  },
+  {
+    "section": "10.3 Locating a nodule using the patient coordinate system",
+    "subsections": []
+  },
+  {
+    "section": "10.4 A straightforward dataset implementation",
+    "subsections": [
+      {
+        "subsection": "10.4.1 Constructing our dataset in LunaDataset.__init__"
+      },
+      {
+        "subsection": "10.4.2 Rendering the data"
+      }
+    ]
+  }
+]

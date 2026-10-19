@@ -1,0 +1,42 @@
+[
+  {
+    "section": "8.2 Convolutions in action",
+    "subsections": []
+  },
+  {
+    "section": "8.3 Subclassing nn.Module",
+    "subsections": [
+      {
+        "subsection": "8.3.1 Our network as an nn.Module"
+      }
+    ]
+  },
+  {
+    "section": "8.4 Training our convnet",
+    "subsections": [
+      {
+        "subsection": "8.4.1 Measuring accuracy"
+      }
+    ]
+  },
+  {
+    "section": "8.5 Model design",
+    "subsections": [
+      {
+        "subsection": "8.5.1 Width"
+      },
+      {
+        "subsection": "8.5.2 Weight regularization"
+      },
+      {
+        "subsection": "8.5.3 Dropout"
+      },
+      {
+        "subsection": "8.5.4 Batch normalization"
+      },
+      {
+        "subsection": "8.5.5 Depth"
+      }
+    ]
+  }
+]
